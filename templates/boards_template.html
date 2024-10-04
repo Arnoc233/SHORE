@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/contrib/auto-render.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    /* 隐藏纵向滚动条 */
+    /* overflow-y: hidden;  */
+    /* 隐藏横向滚动条 */
+    /* overflow-x: hidden;  */
+
+
+    height: 100vh; /* 设置高度 */
+    margin: 0; /* 去掉默认边距 */
+}
+
+.card {
+    /* 确保可以相对于父元素定位 */
+    position: absolute; 
+    border: 1px solid #ccc;
+    border-top: 5px solid transparent; /* 顶部边框 */
+    padding: 5px; 
+    cursor: move; 
+    background-color: white;
+    border-radius: 5px;
+    /* 确保溢出内容可见 */
+    overflow: visible; 
+    /* overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+}
+
+#return-button {
+    /* 确保可以相对于父元素定位 */
+    /* position: absolute; */
+
+    /* 确保相对于视窗进行定位 */
+    position: fixed;
+    width: 80px;
+    top: 10px;
+    right: 3px;
+    
+    border: 1px solid #ccc;
+    padding: 5px; 
+    background-color: white;
+    border-radius: 5px;
+    overflow: visible; /* 确保溢出内容可见 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+    z-index: 1000;
+}
+
+.card-resize-handle {
+    width: 12px; 
+    height: 12px; 
+    border: 1px;
+    background-color: transparent; 
+    border-radius: 50%; 
+    position: absolute;
+    bottom: -5px; 
+    right: -5px;  
+    cursor: se-resize; 
+    display: none;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+}
+.card:hover .card-resize-handle {
+    display: block; /* 鼠标悬停时显示 */
+}
+
+
+.bar {
+    height: 4px;
+    background-color: aliceblue;
+    width: 100%;
+}
+
+.name {
+    /* 为让name的宽度随card的resize而变化。 */
+    width: 100%;
+    /* 为了弥补input框和普通div的显示宽度差距。 */
+    box-sizing: border-box;
+
+    font-weight: bold;
+    border: none; /* 去掉边框 */
+    /* 分隔 name 和 content */
+    /* margin-bottom: 5px;  */
+    /* 文本居中 */
+    text-align: center; 
+    background-color: aliceblue;
+    outline: none; /* 去掉聚焦时的轮廓 */
+}
+
+.content {
+    width: 100%; 
+    height: auto;
+    border: none; /* 去掉边框 */
+    font-size: 14px;
+    font-family: 'Helvetica', '微软雅黑', sans-serif; /* 设置字体 */
+    padding: 5px; /* 设置内边距 */
+    box-sizing: border-box; /* 包含 padding 和 border */
+    resize: none; /* 禁止手动调整大小 */
+    outline: none; /* 去掉聚焦时的轮廓 */
+    background: white;
+    /* background-color: #e5a45b; */
+}
+
+
+#return-button a {
+    font-family: 'Helvetica', '微软雅黑', sans-serif; /* 设置字体 */
+    font-weight: bold;
+    text-decoration: none;
+    color: black; /* 设置颜色为黑色 */
+}
+
+#return-button:hover {
+    background-color: #eee;
+}
+
+#context-menu, #card-context-menu {
+    width: 150px;
+    text-align: center;
+    padding: 3px;
+}
+
+#context-menu div:hover, #card-context-menu div:hover {
+    /* 鼠标悬停时改变背景 */
+    /* background-color: lightgray;  */
+    background-color: #FFFACD;
+}
+
+.footer {
+    /* font-weight: bold; */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    font-size: smaller;
+    /* font-weight: bold; */
+    color: gray;
+    /* background-color: aliceblue; */
+    text-align: center;
+    padding: 5px;
+}
+
+.color-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 2px;
+    cursor: pointer;
+}
+
+/* .zoom-controls {
+    position: fixed; 
+    top: 0px;
+    left: 0.1px; 
+    z-index: 1000; 
+} */
+
+/* #zoom-out,
+#zoom-in {
+    font-weight: bold;
+    background-color: #ddd;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#zoom-level {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+    width: 60px;
+    text-align: center;
+}
+
+#reset-zoom {
+    font-weight: bold;
+    background-color: #ddd;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+} */
+
+.img-container {
+    display: inline-block; /* 或者 block，取决于布局需求 */
+    /* background-color: #ecd255; */
+    width: auto;
+    position: relative;
+}
+
+.img-resize-handle {
+    width: 12px; 
+    height: 12px; 
+    border: 1px;
+    background-color: transparent; 
+    border-radius: 50%; 
+    position: absolute;
+    bottom: -5px; 
+    right: -5px;  
+    cursor: se-resize; 
+    display: none;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.img-container:hover .img-resize-handle {
+    display: block; /* Show on hover */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.katex-display {
+    /* background-color: #FFFACD; */
+    /* background-color: white; */
+    background-color: aliceblue;
+}
+.katex-display:hover {
+    background-color: #FFFACD;
+}
+
+.originLATEX {
+    margin-left: 1px;
+    margin-right: 1px;
+    background-color: #ffbec0;
+    padding-left:  3.5px;
+    padding-right: 3.5px;
+    width: 98%;
+    /* text-align: center; */
+    font-family: 'JetBrains Mono','Courier New', Courier, monospace;
+    font-size: 18px;
+}
+
+
+</style>
+</head>
+
+<body>
+<div id="notification" style="display: none; 
+    /* background: #FFFACD;  */
+    background-color: darkturquoise; 
+    color: white;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px; position: fixed; top: 0; left: 20%;
+    font-family: Arial, Helvetica, '微软雅黑', sans-serif;
+    border-radius: 5px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    width: 60%; text-align: center; z-index: 100;">
+正在输入中，按 Ctrl + S 完成内容修改。
+</div>
+
+<div id="context-menu" style="display:none; position:absolute; background:white; border:1px solid #ccc; z-index:1000;">
+    <div id="create-card" style="padding:5px; cursor:pointer;">创建新卡片</div>
+</div>
+
+<div id="card-context-menu" style="display:none; position:absolute; background:white; border:1px solid #ccc; z-index:1000;">
+    <div id="delete-card" style="padding:5px; cursor:pointer;">删除该卡片</div>
+    <div id="change-color" style="padding:5px; cursor:pointer;">使用自定义颜色</div>
+    <div id="color-picker" style="padding-top: 8px; text-align: center;">
+        <div class="color-circle" style="background-color: #ffbec0;"></div>
+        <div class="color-circle" style="background-color: #4152d8;"></div>
+        <div class="color-circle" style="background-color: #ff6443"></div>
+        <div class="color-circle" style="background-color: #fec330;"></div>
+        <div class="color-circle" style="background-color: brown;"></div>
+        <br>
+        <div class="color-circle" style="background-color: #e5a45b;"></div>
+        <div class="color-circle" style="background-color: #ecd255;"></div>
+        <div class="color-circle" style="background-color: #a0cf81;"></div>
+        <div class="color-circle" style="background-color: #8195f6;"></div>
+        <div class="color-circle" style="background-color: black;"></div>
+    </div>
+    <div id="copy-that-card" style="padding:5px; cursor:pointer;">复制该卡片</div>
+    <div id="delete-latex" style="padding:5px; cursor:pointer;">删除该段LATEX</div>
+    <div id="set-z-index" style="padding:5px; cursor:pointer;">设置Z轴</div>
+</div>
+
+<div class="footer" id="footer">
+    <div style="width: 100%; height: 6px; background-color: transparent; z-index: -1000;"">
+    </div>
+    <div>21生信 王硕 苏州大学苏州医学院  Oct 4th, 2024, SHORE Ver 0.3.4</div>
+</div>
+
+<div id="return-button"> <a href="{{ url_for('welcome') }}" >返回主页</a>
+</div>
+
+<!-- 我觉得，根本没必要设置这个缩放 -->
+<!-- <div class="zoom-controls" id="zoom-controls" style="display: none;">
+    <button id="zoom-out">-</button>
+    <input type="number" id="zoom-level" value="100" style="width: 50px; text-align: center;" />
+    <button id="zoom-in">+</button>
+    <button id="reset-zoom" style="margin-left: 0.1px;">重置</button></div> -->
+
+{% for card in cards %}
+<div class="card" id="{{ card.id }}" style="left: {{ card.left }}px; top: {{ card.top }}px; width: {{ card.width }}px; height: {{ card.height }}px; border-top: 5px solid {{ card.color}}">
+    <div class="bar"></div>
+    <input class="name" value="{{ card.name }}" oninput="updateName(this)" />
+    <div class="bar"></div>
+    <div class="content" oninput="debounceUpdateContent(this)" onblur="updateCardContent(this)" contenteditable="true">
+            {{ card.content|safe }}
+            <!-- {{ card.content}} -->
+    </div>
+    <div class="card-resize-handle" style="background-color: {{ card.color}};"></div>
+</div>
+{% endfor %}
+<!-- X|safe的语法可以把X的内容按照HTML来渲染，而不仅仅是字符串。比如换行符，引用的图片，超链接等等...  -->
+
+
+<script>
+// 在模板中传递当前板名称
+const currentBoardName = '{{ board_name }}';  
+console.log('Current Board Name:', currentBoardName);
+document.body.style.cursor = 'default';
+
+// 拖动整个 whole-space
+let isWholeSpaceDragging = false;
+let spaceOffsetX, spaceOffsetY;
+
+function adjustBodySize() {
+    const body = document.body;
+
+    const maxRight = Math.max(...cardPositions.map(pos => pos.left + pos.card.offsetWidth));
+    const maxBottom = Math.max(...cardPositions.map(pos => pos.top + pos.card.offsetHeight));
+
+    // Add extra space
+    const extraSpace = 100; // Adjust this value for more or less space
+    body.style.width = (maxRight + extraSpace) + 'px';
+    body.style.height = (maxBottom + extraSpace) + 'px';
+}
+
+
+const regexBlock1 = /<div><span><span class="katex-display">.*?<annotation encoding="application\/x-tex">/g;
+const regexBlock1_sup = /(\$\$.*?)<\/annotation.*?\/span><\/div>/g;
+const regexBlock2 = /<span><span class="katex-display">.*?display="block".*?<annotation encoding="application\/x-tex">/g;
+const regexBlock2_sup = /(\$\$.*?)<\/annotation.*?<\/span><\/span><\/span><\/span><\/span><\/span>/g;
+
+const regexInline = /<span><span class="katex"><span class="katex-mathml">.*?<annotation encoding="application\/x-tex">/g;
+const regexInline_sup = /<\/annotation.*?<\/span><\/span><\/span><\/span><\/span>/g;
+const replaceBlock = "\$\$\$\$";
+const replaceInline = "\$";
+
+const regex_after = /\$<\/span>.*?<\/span><\/span><\/span><\/span><\/span><\/span>/g;
+
+// 移除多余的部分
+function cleanHTML(content) {
+    if (typeof content !== 'string') { return ''; }
+    // console.log(content);
+
+    // Step 1: Remove HTML comments and trim whitespace
+    content = content.replace(/<!--.*?-->/gs, '').trim();
+
+    // Step 2: Handle specific HTML structure
+    content = content
+        .replace(/<div>\s*?<br>\s*?<\/div>/gi, '<br>') // Replace <div><br></div> with <br>
+        .replace(/<span><\/span>/gs, '')
+        .replace(/<br>\s*<br>/g, '<br>'); // Remove spaces between <br> tags
+
+    // Step 3: Check and replace using regex patterns
+    if (regexBlock1.test(content)) {
+        console.log("检测到regexBlock1");
+        // console.log(content);
+        content = content.replace(regexBlock1, replaceBlock);
+        // console.log(content);
+        content = content.replace(regexBlock1_sup, `$1${replaceBlock}`);
+        // console.log(content);
+    }
+
+    if (regexBlock2.test(content)) {
+        console.log("检测到regexBlock2");
+        // console.log(content);
+        content = content.replace(regexBlock2, replaceBlock);
+        // console.log(content);
+        content = content.replace(regexBlock2_sup, `$1${replaceBlock}`);
+        // console.log(content);
+    }
+
+    if (regexInline.test(content)) {
+        console.log("检测到regexInline");
+        // console.log(content);
+        content = content.replace(regexInline, replaceInline);
+        // console.log(content);
+        content = content.replace(regexInline_sup, replaceInline);
+        // console.log(content);
+    }
+
+    content = content.replace(regex_after, "\$")
+
+    // Step 4: Ensure proper placement of <br> tags
+    if (/^<div>/.test(content) && !/<br>$/.test(content)) {
+        content = '<br>' + content; // Add <br> at the beginning
+    }
+
+    if (!/<br>$/.test(content) && /<\/div>$/.test(content)) {
+        content = content + '<br>'; // Add <br> at the end
+    }
+
+    // console.log(content);
+    return content;
+}
+
+
+// 存储所有卡片的初始位置
+const cards = Array.from(document.querySelectorAll('.card'));
+const cardPositions = cards.map(card => ({
+    card,
+    left: parseFloat(card.style.left),
+    top: parseFloat(card.style.top)
+}));
+
+
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' 
+        && document.activeElement.className !== 'content'
+        && document.activeElement.className !== 'name'
+        && document.activeElement.className !== 'originLATEX'
+        && document.activeElement.className !== 'originLATEX_inline'
+        ) {
+        e.preventDefault();
+        isWholeSpaceDragging = !isWholeSpaceDragging; // Toggle dragging
+        document.body.style.userSelect = isWholeSpaceDragging ? 'none' : '';
+        document.body.style.cursor = isWholeSpaceDragging ? 'grab' : ''; // Change cursor
+        if (!isWholeSpaceDragging) {
+            document.removeEventListener('mousemove', dragAllCards); // Stop dragging if toggled off
+        }
+    }
+});
+
+document.addEventListener('mousedown', (e) => {
+    if (isWholeSpaceDragging) {
+        spaceOffsetX = e.clientX;
+        spaceOffsetY = e.clientY;
+        document.addEventListener('mousemove', dragAllCards);
+    }
+});
+
+
+document.addEventListener('mouseup', (e) => {
+    if (isWholeSpaceDragging) {
+        document.removeEventListener('mousemove', dragAllCards);
+        const topChange = e.clientY - spaceOffsetY;
+        const leftChange = e.clientX - spaceOffsetX;
+        
+        // 更新初始位置
+        cardPositions.forEach(pos => {
+            pos.left += leftChange;
+            pos.top += topChange;
+        });
+
+        adjustBodySize();
+
+        fetch('/move_all_cards', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify({ 
+                board_name: currentBoardName,
+                top_change: topChange,
+                left_change: leftChange,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status !== 'success') {  // 更新以匹配后端响应
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('An error occurred while moving the cards. Please try again.');
+        });
+    }
+});
+
+
+function dragAllCards(e) {
+    const deltaX = e.clientX - spaceOffsetX;
+    const deltaY = e.clientY - spaceOffsetY;
+    cardPositions.forEach(pos => {
+        const newLeft = pos.left + deltaX;
+        const newTop = pos.top + deltaY;
+        pos.card.style.left = newLeft + 'px';
+        pos.card.style.top = newTop + 'px';
+    });
+
+}
+
+
+// 卡片拖拽功能
+let isDragging = false;
+let offsetX, offsetY, currentCard;
+
+
+function startDrag(e, card) {
+    isDragging = true;
+    currentCard = card;
+    offsetX = e.clientX - card.offsetLeft;
+    offsetY = e.clientY - card.offsetTop;
+    document.body.style.userSelect = 'none';
+}
+
+function drag(e) {
+    if (isDragging && currentCard) {
+        const left = e.clientX - offsetX;
+        const top = e.clientY - offsetY;
+        currentCard.style.left = left + 'px';
+        currentCard.style.top = top + 'px';
+    }
+}
+
+function stopDrag(e) {
+    if (isDragging) {
+        isDragging = false;
+        const cardID = currentCard.id;
+        const cardLeft = currentCard.style.left;
+        const cardTop = currentCard.style.top;
+
+        // 更新 cardPositions 数组中的位置
+        const index = cardPositions.findIndex(pos => pos.card.id === cardID);
+        if (index !== -1) {
+            cardPositions[index].left = parseFloat(cardLeft);
+            cardPositions[index].top = parseFloat(cardTop);
+        }
+
+        adjustBodySize();
+
+        fetch('/update_card', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify({ 
+                board_name: currentBoardName,
+                card_id: cardID, 
+                left: cardLeft, 
+                top: cardTop, 
+            })
+        })
+        .then(response => response.json())
+        // .then(data => {
+        //     console.log('Success:', data);
+        // })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    document.body.style.userSelect = '';
+}
+
+
+let debounceTimeout;
+
+function debounceUpdateContent(div) {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        // 这里可以选择只更新高度
+        const card = div.parentElement;
+        const totalHeight = div.scrollHeight;
+        div.style.height = `${totalHeight}px`;
+        card.style.height = `${totalHeight + 34}px`;
+    }, 300); 
+}
+
+function updateCardContent(div) {
+    const card = div.parentElement;
+    const card_id = card.id;
+    const content = cleanHTML(div.innerHTML);
+    const name = card.querySelector('.name').value;
+    
+    console.log(`updating card: ${card_id}`);
+
+    // 发送更新数据到服务器
+    fetch('/update_card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({
+            board_name: currentBoardName,
+            card_id: card_id,
+            content: content,
+            name: name,
+            height: `${div.scrollHeight + 34}px`,
+        })
+    })
+    .then(response => response.json())
+    .catch((error) => {
+        console.error('Error: updateContent数据同步失败。', error);
+    });
+}
+
+
+
+// 右键菜单相关（空白处）
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const menu = document.getElementById('context-menu');
+    const cardMenu = document.getElementById('card-context-menu');
+    
+    if (e.target.classList.contains('card') || e.target.classList.contains('name')) {
+        const cardId = e.target.closest('.card').id;
+        cardMenu.style.left = `${e.pageX}px`;
+        cardMenu.style.top = `${e.pageY}px`;
+        cardMenu.style.display = 'block';
+        cardMenu.dataset.cardId = cardId;
+
+    } else {
+        menu.style.left = `${e.pageX}px`;
+        menu.style.top = `${e.pageY}px`;
+        menu.style.display = 'block';
+    }
+});
+
+// 点击空白处隐藏菜单
+document.addEventListener('click', () => {
+    document.getElementById('context-menu').style.display = 'none';
+    document.getElementById('card-context-menu').style.display = 'none';
+});
+
+
+let activeLatexElement = null; // 用于保存当前活动的LaTeX元素
+
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    const card = e.target.closest('.card');
+    const menu = document.getElementById('card-context-menu');
+    const latexElement = e.target.closest('.originLATEX, .originLATEX_inline'); // 检查是否在 LaTeX 元素上
+
+    if (card) {
+        const cardId = card.id;
+        menu.style.left = `${e.pageX}px`;
+        menu.style.top = `${e.pageY}px`;
+        menu.style.display = 'block';
+
+        // 点击删除卡片选项
+        document.getElementById('delete-card').onclick = function() {
+            card.remove(); 
+            fetch('/delete_card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({ board_name: currentBoardName, card_id: cardId })
+            });
+            menu.style.display = 'none'; 
+        };
+
+
+        // 设置z轴
+        const setZIndexButton = document.getElementById('set-z-index');
+        setZIndexButton.addEventListener('click', function handleClick() {
+            let zIndex = card.style.zIndex || window.getComputedStyle(card).zIndex;
+            const customZValue = prompt(`当前Z值是 ${zIndex}. 请输入自定义Z值`, zIndex);
+            if (customZValue !== null) {
+                card.style.zIndex = customZValue;
+            }
+            // Optionally remove the event listener to prevent multiple prompts
+            setZIndexButton.removeEventListener('click', handleClick);
+        });
+
+
+        // 点击删除LaTeX选项，仅当在 LaTeX 元素上右键时显示
+        if (latexElement) {
+            activeLatexElement = latexElement; // 保存当前活动的 LaTeX 元素
+            document.getElementById('delete-latex').style.display = 'block'; // 显示删除 LaTeX 选项
+            
+            document.getElementById('delete-latex').onclick = function() {
+                if (activeLatexElement) {
+                    activeLatexElement.remove(); // 删除最近的LaTeX元素
+                    activeLatexElement = null; // 清除引用
+                }
+                menu.style.display = 'none'; 
+            };
+        } else {
+            document.getElementById('delete-latex').style.display = 'none'; // 隐藏删除 LaTeX 选项
+        }
+
+        // 绑定点击事件到复制按钮
+        document.getElementById('copy-that-card').onclick = function() {
+            const cardId = card.id;
+            const cardToCopy = document.getElementById(cardId); // Get the card to copy
+
+            // Clone the card
+            const newCard = cardToCopy.cloneNode(true); // Clone the card and its contents
+            const newCardId = Date.now(); // Generate a new unique ID
+            newCard.id = newCardId; // Assign the new ID
+            newCard.style.left = (parseInt(cardToCopy.style.left) + 20) + 'px'; // Adjust left position
+            newCard.style.top = (parseInt(cardToCopy.style.top) + 20) + 'px'; // Adjust top position
+            newCard.style.width = cardToCopy.style.width
+            newCard.style.height = (parseInt(cardToCopy.style.height) + 20) + 'px'; 
+            newCard.style.borderTopColor = cardToCopy.style.borderTopColor
+            const cardName = cardToCopy.querySelector('input').value; // 获取 Name
+
+            // Append the new card to the body
+            // document.body.appendChild(newCard);
+            // 此处我选择不直接在前端添加，而是等内容fetch到后台之后，再刷新页面读出来。
+
+            // Send new card data to the server
+            fetch('/add_card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({ 
+                    board_name: currentBoardName, 
+                    card_id: newCardId, 
+                    card_name: cardName,
+                    content: cardToCopy.querySelector('.content').innerHTML, // Copy the content
+                    top: newCard.style.top.replace('px', ''), // Get top value
+                    left: newCard.style.left.replace('px', ''), // Get left value
+                    width: newCard.style.width.replace('px', ''), // Get width
+                    height: newCard.style.height.replace('px', ''), // Get height
+                    color: newCard.style.borderTopColor // Get border color
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success: Copying Card', data);
+                location.reload(); // Reload to update the view
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+            menu.style.display = 'none'; // Hide the context menu
+        };
+
+
+        // 自定义颜色输入
+        document.getElementById('change-color').onclick = function() {
+            const customColor = prompt("请输入自定义颜色（例如: #ff0000，darkred，transparent）:");
+            if (customColor) {
+                card.style.borderTopColor = customColor; // Apply color to the targeted card
+                const resizeHandle = card.querySelector('.card-resize-handle');
+                if (resizeHandle) {
+                    resizeHandle.style.backgroundColor = customColor; // Change color of resize handle
+                }
+
+                fetch('/update_card', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8'
+                    },
+                    body: JSON.stringify({ 
+                        board_name: currentBoardName, 
+                        card_id: cardId, 
+                        color: customColor 
+                    })
+                });
+            }
+        };
+
+        // 颜色选择功能
+        const colorCircles = document.querySelectorAll('.color-circle');
+        colorCircles.forEach(circle => {
+            circle.onclick = function() {
+                const newColor = this.style.backgroundColor;
+                card.style.borderTopColor = newColor; // Apply color to the targeted card
+                const resizeHandle = card.querySelector('.card-resize-handle');
+                if (resizeHandle) {
+                    resizeHandle.style.backgroundColor = newColor; // Change color of resize handle
+                }
+
+                fetch('/update_card', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8'
+                    },
+                    body: JSON.stringify({ 
+                        board_name: currentBoardName, 
+                        card_id: cardId, 
+                        color: newColor 
+                    })
+                });
+            };
+        });
+    } else {
+        document.getElementById('context-menu').style.left = `${e.pageX}px`;
+        document.getElementById('context-menu').style.top = `${e.pageY}px`;
+        document.getElementById('context-menu').style.display = 'block';
+    }
+});
+
+
+// 创建新卡片的事件
+document.getElementById('create-card').addEventListener('click', (e) => {
+    const newCardId = Date.now(); 
+    const menu = document.getElementById('context-menu');
+
+    // const newCard = document.createElement('div');
+    // newCard.className = 'card';
+    // newCard.id = newCardId;
+    // newCard.style.left = '100px'; 
+    // newCard.style.top = '100px';
+    // newCard.style.width = '200px';
+    // newCard.style.height = '100px';
+
+    // newCard.innerHTML = `
+    //     <div class="bar"></div>
+    //     <input class="name" value="新卡片" oninput="updateName(this)" />
+    //     <div class="bar"></div>
+    //     <div class="content" oninput="debounceUpdateContent(this)" onblur="updateContent(this)"></div>
+    //     <div class="card-resize-handle" style="background-color: transparent;"></div>
+    // `;
+    // 等一手刷新，直接产生卡片，不用先多加一次又被刷掉。
+    // document.body.appendChild(newCard);
+
+    console.log(`${e.pageX}px`)
+    console.log(`${e.pageY}px`)
+
+    fetch('/add_card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ 
+            board_name: currentBoardName, 
+            card_id: newCardId, 
+            content: '',
+            left: `${e.pageX - 100}`,
+            top: `${e.pageY - 10}`,
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success: Adding Card', data);
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    document.getElementById('context-menu').style.display = 'none'; 
+});
+
+
+// 更新Name事件
+function updateName(input) {
+    const card = input.closest('.card'); // 获取 card
+    const card_id = card.id;
+    const name = input.value;
+    // console.log(name)
+    // console.log(id)
+    // 发送更新数据到服务器
+    fetch('/update_card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ 
+            board_name: currentBoardName, 
+            card_id: card_id, 
+            name: name,
+        })
+    })
+    .then(response => response.json())
+    // .then(data => {
+    //     console.log('Success:', data);
+    // })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+
+// 调整卡片长和宽
+document.querySelectorAll('.card-resize-handle').forEach(handle => {
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation(); // Prevent event bubbling
+        document.body.style.userSelect = 'none'; // Disable text selection
+
+        const card = handle.parentElement;
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startWidth = card.offsetWidth;
+        const startHeight = card.offsetHeight;
+
+        function onMouseMove(e) {
+            const newWidth = startWidth + (e.clientX - startX);
+            const newHeight = startHeight + (e.clientY - startY);
+            card.style.width = newWidth + 'px';
+            card.style.height = newHeight + 'px';
+        }
+
+        function onMouseUp() {
+            const id = card.id;
+            // const left = card.style.left;
+            // const top = card.style.top;
+            // const content = cleanHTML(card.querySelector('.content').innerHTML);
+            // const name = card.querySelector('.name').value;
+            const width = card.style.width;
+            const height = card.style.height;
+
+            // Send updated data to the server
+            fetch('/update_card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify({ board_name: currentBoardName, card_id: id, width: width, height: height })
+            })
+            .then(response => response.json())
+            // .then(data => {
+            //     console.log('Success:', data);
+            // })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+});
+
+// 缩放倍数设置器
+// let zoomLevel = 1;
+// document.getElementById('zoom-out').addEventListener('click', () => {
+//     zoomLevel = Math.max(0.1, zoomLevel - 0.1);
+//     updateZoom();
+// });
+
+// document.getElementById('zoom-in').addEventListener('click', () => {
+//     zoomLevel += 0.1;
+//     updateZoom();
+// });
+
+// document.getElementById('zoom-level').addEventListener('change', (e) => {
+//     zoomLevel = Math.max(0.1, e.target.value / 100);
+//     updateZoom();
+// });
+
+// function updateZoom() {
+//     document.body.style.transform = `scale(${zoomLevel})`;
+//     document.body.style.transformOrigin = 'top left';
+
+//     const footer = document.getElementById('footer');
+//     const zoomControls = document.getElementById('zoom-controls');
+//     const returnButton = document.getElementById('return-button');
+
+//     footer.style.transform = `scale(${1 / zoomLevel})`;
+//     footer.style.transformOrigin = 'top left';
+
+//     // 反向缩放缩放控制器
+//     zoomControls.style.transform = `scale(${1 / zoomLevel})`;
+//     zoomControls.style.transformOrigin = 'top left'; // 保持在原位置
+
+//     if (zoomLevel < 1) {
+//         zoomControls.style.left = `${0.1 / zoomLevel}%`;
+//     } else {
+//         zoomControls.style.left = 0.1;
+//     }
+
+//     document.getElementById('zoom-level').value = Math.round(zoomLevel * 100);
+// }
+
+// document.getElementById('reset-zoom').addEventListener('click', () => {
+//     zoomLevel = 1; // 重置缩放比例
+//     updateZoom(); // 更新缩放效果
+// });
+
+
+// 图片粘贴处理（上传与保存）以及无格式粘贴
+document.querySelectorAll('.content').forEach(contentArea => {
+    contentArea.addEventListener('paste', async function(event) {
+        event.preventDefault(); // 阻止默认粘贴行为
+        const items = event.clipboardData.items;
+        const hasImages = Array.from(items).some(item => item.type.startsWith('image/'));
+        const isShiftPressed = event.shiftKey;
+
+        if (hasImages) {
+            const imagePromises = [];
+            for (const item of items) {
+                if (item.type.startsWith('image/')) {
+                    const file = item.getAsFile();
+                    const formData = new FormData();
+                    const timestamp = Date.now();
+                    formData.append('image', file, `${timestamp}.png`);
+
+                    const uploadPromise = fetch(`/uploads/${currentBoardName}/${timestamp}`, {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => {
+                        if (response.ok) {
+                            const img = document.createElement('img');
+                            img.src = `/uploads/${currentBoardName}/${timestamp}.png`;
+                            img.alt = '粘贴的图片';
+                            img.style.display = 'block';
+                            img.style.boxShadow = '1px 1px 3px rgba(0, 0, 0, 0.5)'; // 添加 box-shadow 样式
+
+                            const imgContainer = document.createElement('div');
+                            imgContainer.classList.add('img-container');
+                            imgContainer.style.position = 'relative';
+                            imgContainer.appendChild(img);
+
+                            const resizeHandle = document.createElement('div');
+                            resizeHandle.className = 'img-resize-handle';
+                            resizeHandle.style.backgroundColor = 'black';
+                            imgContainer.appendChild(resizeHandle);
+
+                            // Insert the image container at the current cursor position
+                            insertAtCaret(this, imgContainer.outerHTML); // Using outerHTML to insert the entire container
+
+                            addImageResizeFunctionality(resizeHandle, img, imgContainer);
+                        }
+                    });
+                    imagePromises.push(uploadPromise);
+                }
+            }
+            await Promise.all(imagePromises);
+            updateCardContent(contentArea)
+            // Refresh after a delay
+            setTimeout(() => {
+                location.reload(); // Refresh the page
+            }, 100);
+        } else if (isShiftPressed) {
+            // Handle plain text pasting
+            const text = await navigator.clipboard.readText();
+            insertAtCaret(this, text); // Insert plain text at the caret
+        } else {
+            // Handle formatted text pasting
+            const formattedText = event.clipboardData.getData('text/html');
+            if (formattedText) {
+                insertAtCaret(this, formattedText); // Insert formatted text at the caret
+            } else {
+                const text = event.clipboardData.getData('text/plain');
+                insertAtCaret(this, text); // Insert plain text at the caret
+            }
+        }
+    });
+
+    function insertAtCaret(el, text) {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.deleteContents(); // Remove any selected content
+
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text; // Use innerHTML to support HTML content
+        const frag = document.createDocumentFragment();
+        let node;
+        while ((node = tempDiv.firstChild)) {
+            frag.appendChild(node);
+        }
+        range.insertNode(frag); // Insert the content at the caret position
+
+        // Move the cursor to the end of the inserted content
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    contentArea.addEventListener('input', function() {
+        updateHeight_Img(this);
+    });
+});
+
+
+
+
+// Function to add resizing functionality to the resize handle
+function addImageResizeFunctionality(handle, img, imgContainer) {
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        document.body.style.userSelect = 'none';
+        handle.style.display = 'block'
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startWidth = img.offsetWidth;
+        const startHeight = img.offsetHeight;
+        const aspectRatio = startWidth / startHeight;
+
+        function onMouseMove(e) {
+            const newWidth = Math.max(50, startWidth + (e.clientX - startX)); // Prevent shrinking too small
+            const newHeight = newWidth / aspectRatio; // Maintain aspect ratio
+            img.style.width = newWidth + 'px';
+            img.style.height = newHeight + 'px';
+            imgContainer.dataset.width = newWidth;
+            imgContainer.dataset.height = newHeight;
+        }
+
+        function onMouseUp() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            handle.style.display = 'none'
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+}
+
+// 更新卡片高度的函数
+function updateHeight_Img(contentArea) {
+    const card = contentArea.parentElement;
+    const content = cleanHTML(contentArea.innerHTML);
+    let totalHeight = contentArea.scrollHeight;
+
+    contentArea.style.height = `${totalHeight}px`;
+    card.style.height = `${totalHeight + 34}px`; // 34是顶部和底部的padding、border等的总和
+
+    fetch('/update_card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ 
+            board_name: currentBoardName,
+            card_id: card.id, 
+            height: `${totalHeight + 34}px`,
+        })
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+async function syncImageToBackend(card_id, content) {
+    // console.log(card_id)
+    // console.log(content)
+    await fetch(`/sync_content_with_image`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({ 
+            board_name: currentBoardName,
+            card_ID: card_id, 
+            card_content: content,
+        })
+    });
+}
+
+// 监听图片删除
+// 补充：注意不要有 headers 
+// 也不需要设置utf-8
+let previousImages = [];
+setInterval(() => {
+    const currentImages = Array.from(document.querySelectorAll('img'));
+    
+    if (currentImages.length < previousImages.length) {
+        previousImages.forEach(src => {
+            if (!currentImages.some(img => img.src === src)) {
+                const decodedSrc = decodeURIComponent(src);
+                console.log(`Image deleted: ${decodedSrc}`);
+                fetch('/delete_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify({ imageSrc: src })
+                });
+            }
+        });
+    }
+    
+    previousImages = currentImages.map(img => img.src);
+}, 500);
+
+
+document.querySelectorAll('.img-resize-handle').forEach(handle => {
+    handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        document.body.style.userSelect = 'none';
+
+        const imgContainer = handle.parentElement;
+        const img = imgContainer.querySelector('img');
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startWidth = img.offsetWidth;
+        const startHeight = img.offsetHeight;
+        const aspectRatio = startWidth / startHeight;
+
+        function onMouseMove(e) {
+            const newWidth = Math.max(50, startWidth + (e.clientX - startX)); // Prevent shrinking too small
+            const newHeight = newWidth / aspectRatio; // Maintain aspect ratio
+            img.style.width = newWidth + 'px';
+            img.style.height = newHeight + 'px';
+            imgContainer.dataset.width = newWidth;
+            imgContainer.dataset.height = newHeight;
+        }
+
+        function onMouseUp() {
+            // Send updated dimensions to the server
+            const imgId = imgContainer.closest('.card').id; // Assuming the card is a parent element
+            const imgSrc = img.src;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            const content = img.closest('.content')
+            updateCardContent(content)
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+});
+
+
+const notification = document.getElementById('notification');
+
+// Show notification on focusin
+document.addEventListener('focusin', function(event) {
+    if (event.target.classList.contains('content')) {
+        notification.style.animation = 'fadeIn 1s ease';
+        notification.style.display = 'block';
+    }
+});
+
+// Hide notification on focusout
+document.addEventListener('focusout', function(event) {
+    if (event.target.classList.contains('content')) {
+        notification.style.display = 'none';
+    }
+});
+
+// Hide notification on Ctrl+S key
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault(); // Prevent the default save action
+        const focusedElement = document.activeElement;
+        if (focusedElement.classList.contains('content')) {
+            focusedElement.blur();
+            notification.style.display = 'none';
+        }
+    }
+});
+
+let currentMode = 'normal'; // Default mode
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        console.log(currentMode)
+        if (currentMode === 'normal') {
+            const katexElements = document.querySelectorAll('.katex');
+            // Iterate over all .katex elements
+            katexElements.forEach(katexElement => {
+            const annotation = katexElement.querySelector('annotation');
+            if (annotation) {
+                const hasDisplay = !!katexElement.closest('.katex-display'); // 检查是否有.katex-display
+                const dollarSigns = hasDisplay ? '$$' : '$'; // 决定加几个美元符号
+
+                const newOriginPart = hasDisplay ? document.createElement('div') : document.createElement('mark');
+                newOriginPart.className = hasDisplay ? 'originLATEX':'originLATEX_inline';
+                newOriginPart.textContent = `${dollarSigns}${annotation.textContent}${dollarSigns}`;
+                newOriginPart.style.backgroundColor = "aliceblue";
+                katexElement.parentElement.replaceWith(newOriginPart);
+                currentMode = 'plain-text'; // Update mode
+            } else {
+                console.error('No annotation element found.');
+            }
+        });
+            console.log(currentMode);
+        } else { // If currentMode is 'plain-text'
+            setTimeout(() => {
+                location.reload(); // Refresh the page
+            }, 50); // Delay to ensure text replacement is complete
+            console.log(currentMode);
+        }
+    }
+});
+
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+        const selectedElement = document.querySelector('.selected'); // 假设你有一个选中的元素
+        
+        if (selectedElement) {
+            selectedElement.parentElement.remove(); // 删除选中的元素
+            currentMode = 'normal'; // 重置模式
+            console.log(currentMode);
+        }
+    }
+
+});
+
+// 添加选中元素的功能，例如：
+document.addEventListener('click', function(event) {
+    const katexElements = document.querySelectorAll('.katex');
+    katexElements.forEach(element => {
+        element.classList.remove('selected'); // 清除之前的选中状态
+    });
+    
+    if (event.target.classList.contains('katex')) {
+        event.target.classList.add('selected'); // 添加选中状态
+    }
+});
+
+
+
+// 页面加载完成后，运行
+document.addEventListener('DOMContentLoaded', function() {
+
+    renderMathInElement(document.body, {
+        delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+        ]
+    });
+
+    const marks = document.querySelectorAll('.originLATEX_inline, .originLATEX');
+    marks.forEach(mark => {
+        const parentMark = mark.parentElement;
+
+        if (mark.className === 'originLATEX_inline' && parentMark.className === 'originLATEX_inline') {
+            parentMark.innerHTML = mark.innerHTML;
+        } else if (mark.className === 'originLATEX') {
+            const grandparentMark = parentMark.parentElement;
+            if (grandparentMark.className === 'originLATEX') {
+                grandparentMark.innerHTML = mark.innerHTML;
+            }
+        }
+    });
+
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        const contentArea = card.querySelector('.content');
+        contentArea.style.height = 'auto';
+        contentArea.style.height = contentArea.scrollHeight + 'px';
+        card.addEventListener('mousedown', (e) => {
+            if (!e.target.classList.contains('content')) {
+                startDrag(e, card);
+            }
+        });
+    });
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('mousemove', drag);
+    
+
+
+    document.querySelectorAll('.originLATEX').forEach(function(element) {
+        element.style.backgroundColor = 'pink';
+    });
+
+    document.querySelectorAll('.originLATEX_inline').forEach(function(element) {
+        element.style.backgroundColor = 'whitesmoke';
+        element.addEventListener('mouseenter', function() {
+            element.style.backgroundColor = '#FFFACD';
+        });
+        element.addEventListener('mouseleave', function() {
+            element.style.backgroundColor = 'aliceblue';
+        });
+
+        const parentText = element.parentNode.textContent;
+        if (!parentText.includes(' ')) {
+            const wrapper = document.createElement('span');
+            wrapper.style.color = 'black';
+            wrapper.innerHTML = '  ' + element.outerHTML + '  ';
+            element.parentNode.replaceChild(wrapper, element);
+        }
+    });
+
+    adjustBodySize();
+});
+
+
+</script>
+</body>
+</html>

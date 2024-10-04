@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Selector</title>
+    <style>
+        h1 {
+            font-size: 36px;
+            font-family: Helvetica, Arial, sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        ul.board-list {
+            list-style-type: none;
+            padding: 0;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        ul.board-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        ul.board-list li a {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+            max-width: 550px;
+            width: 550px;
+        }
+
+        ul.board-list li a:hover {
+            text-decoration: underline;
+        }
+
+        .delete-board, .rename-board {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .delete-board:hover {
+            background-color: #971b28;
+        }
+
+        .rename-board {
+            background-color: orange;
+        }
+
+        .rename-board:hover {
+            background-color: #e0a800;
+        }
+
+        .form-container {
+            display: flex;
+            width: 100%;
+        }
+
+        #new-board-name, .rename-input {
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            width: 100%;
+        }
+
+        .add-board {
+            width: 15%;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            /* background-color: #28a745; */
+            background-color: #28a543;
+        }
+
+        .add-board:hover {
+            background-color: #528794;
+        }
+
+        .footer {
+            position: fixed;  
+            width: 100%;
+            bottom: 0;
+            font-size: smaller;
+            color: gray;
+            background-color: aliceblue;
+            text-align: center;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1><img src="./templates/favicon.jpeg" alt="Website icon" width="80px"><br>如意画卷 SHORE Ver 0.3.4<br>
+        <span style="font-size: 24px; color: #1f8034;">(Scroll Helper Over Resizable Elements)</span></h1>
+    <ul class="board-list">
+        <!-- <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">Select One Here!</li> -->
+        <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">选择现有的如意画卷↓</li>
+        {% for board in boards %}
+        <li>
+            <a href="{{ url_for('board_selecting', board_name=board) }}" class="text-truncate">{{ board }}</a>
+            <button class="rename-board" data-board="{{ board }}">重命名</button>
+            <button class="delete-board" data-board="{{ board }}">删除</button>
+        </li>
+        {% endfor %}
+        <!-- <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
+            Create Empty Scrolls Here!<br><br>(Try not to use same name.)
+        </li> -->
+        <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
+            在此创建你的如意画卷吧！<br><br>(注意名字不要重复)
+        </li>
+        <li>
+            <br>
+            <form id="add-board-form" class="form-container">
+                <input type="text" id="new-board-name" placeholder="新画板名称">
+                <button type="submit" class="add-board">添加画板</button>
+            </form>
+        </li>             
+    </ul>
+</div>
+<div class="footer">
+    21生信 王硕 苏州大学苏州医学院<br>Oct 4th, 2024, SHORE Ver 0.3.4
+</div>
+
+<script>
+document.getElementById('add-board-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const boardName = document.getElementById('new-board-name').value;
+    
+    fetch('/add_board', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ board_name: boardName }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        } else {
+            console.error('Error:', data.error);
+        }
+    })
+    .catch(error => console.error('Fetch error:', error));
+});
+
+document.querySelectorAll('.delete-board').forEach(button => {
+    button.addEventListener('click', function() {
+        const boardName = this.getAttribute('data-board');
+        const confirmDelete = confirm(`您确定要删除白板 "${boardName}" 吗？`);
+        if (!confirmDelete) return;
+
+        fetch('/delete_board', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ board_name: boardName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error('Fetch error:', error));
+    });
+});
+
+// Rename board functionality
+document.querySelectorAll('.rename-board').forEach(button => {
+    button.addEventListener('click', function() {
+        const oldName = this.getAttribute('data-board');
+        
+        // Prompt user for the new board name
+        const newName = prompt(`为您的白板"${oldName}"赋予一个新的名称:`);
+        if (!newName) {
+            return;  // Exit if the user cancels or inputs an empty name
+        }
+
+        fetch('/rename_board', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ old_name: oldName, new_name: newName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();  // Refresh the page to reflect the new board name
+            } else {
+                alert(data.error);  // Show error message
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('An error occurred while renaming the board. Please try again.');
+        });
+    });
+});
+
+</script>
+</body>
+</html>
