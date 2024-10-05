@@ -7,7 +7,7 @@ SHORE is an open-source software designed to help you curate your knowledge and 
 ![Executable](https://img.shields.io/badge/Platform-Windows%20Executable-orange)
 
 ## Develop
-![Backend](https://img.shields.io/badge/Language-Python-blue)
+![Backend](https://img.shields.io/badge/Backend-Python-blue)
 ![Frontend](https://img.shields.io/badge/Frontend-HTML%2C%20CSS%2C%20JavaScript-brightgreen)
 
 ## Key Features
