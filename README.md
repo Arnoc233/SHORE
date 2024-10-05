@@ -1,5 +1,7 @@
 # SHORE (Scroll Helper Over Resizable Elements) v0.3.4
-SHORE is an open-source software designed to help you curate your knowledge and desires.
+SHORE is an open-source software designed to help you curate your knowledge and desires.  
+**Author**: Shuo Wang, Bioinformatics, Soochow University, shuowang3t6b@163.com  
+**Publish Time**: Oct 4th, 2024.
 
 ## Users
 ![Executable](https://img.shields.io/badge/Platform-Windows%20Executable-orange)
@@ -8,7 +10,7 @@ SHORE is an open-source software designed to help you curate your knowledge and 
 ![Backend](https://img.shields.io/badge/Language-Python-blue)
 ![Frontend](https://img.shields.io/badge/Frontend-HTML%2C%20CSS%2C%20JavaScript-brightgreen)
 
-## Main Feature
+## Key Features
 With SHORE v0.3.4, you can:
 - **Add cards to a scroll**: Each card can be dragged, resized, and edited to your liking.
 - **Create, delete, and rename scrolls**: Each scroll has infinite space to move cards around.
