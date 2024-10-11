@@ -1,0 +1,354 @@
+/* ==============================================
+# PART I. Whole body, and viewing controllers.
+============================================== */
+body {
+    /* 隐藏纵向滚动条 */
+    /* overflow-y: hidden;  */
+    /* 隐藏横向滚动条 */
+    /* overflow-x: hidden;  */
+    height: 100vh; /* 设置高度 */
+    margin: 0; /* 去掉默认边距 */
+}
+
+.footer {
+    /* font-weight: bold; */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    font-size: smaller;
+    /* font-weight: bold; */
+    color: gray;
+    /* background-color: aliceblue; */
+    text-align: center;
+    padding: 5px;
+}
+
+#notification {
+    display: none; 
+    /* background: #FFFACD;  */
+    background-color: darkturquoise; 
+    color: white;
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px; position: fixed; top: 0; left: 20%;
+    font-family: Arial, Helvetica, '微软雅黑', sans-serif;
+    border-radius: 5px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    width: 60%; text-align: center; z-index: 100;
+} 
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#return-button {
+    /* 确保可以相对于父元素定位 */
+    /* position: absolute; */
+
+    /* 确保相对于视窗进行定位 */
+    position: fixed;
+    width: 80px;
+    top: 10px;
+    right: 3px;
+    
+    border: 1px solid #ccc;
+    padding: 5px; 
+    background-color: white;
+    border-radius: 5px;
+    overflow: visible; /* 确保溢出内容可见 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+    z-index: 1000;
+}
+
+#return-button a {
+    font-family: 'Helvetica', '微软雅黑', sans-serif; /* 设置字体 */
+    font-weight: bold;
+    text-decoration: none;
+    color: black; /* 设置颜色为黑色 */
+}
+
+#return-button:hover {
+    background-color: #eee;
+}
+
+
+/* ==============================================
+# PART II. Right-Click Menu.
+============================================== */
+#context-menu, #card-context-menu {
+    display:none; 
+    position:absolute; 
+    background:white; 
+    border:1px solid #ccc; 
+    z-index:1000; 
+    border-radius: 5px;
+    /* width: 150px; */
+    width: 160px;
+    text-align: center;
+    padding: 3px;
+}
+
+#card-context-menu div, #context-menu div{
+    background: white; /* 背景颜色 */
+    border-radius: 5px; /* 圆角边框 */
+    /* 阴影效果 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 2px;
+}
+
+#context-menu div:hover, #card-context-menu div:hover {
+    /* 鼠标悬停时改变背景 */
+    /* background-color: lightgray;  */
+    background-color: #FFFACD;
+}
+
+.color-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 2px;
+    cursor: pointer;
+}
+
+
+
+/* ==============================================
+# PART III. Cards, and their contents.
+============================================== */
+.card {
+    /* 确保可以相对于父元素定位 */
+    position: absolute; 
+    border: 1px solid #ccc;
+    border-top: 5px solid transparent; /* 顶部边框 */
+    padding: 5px; 
+    cursor: move; 
+    background-color: white;
+    border-radius: 5px;
+    /* 确保溢出内容可见 */
+    overflow: visible; 
+    /* overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+    height: fit-content;
+}
+
+.card-resize-handle {
+    width: 12px; 
+    height: 12px; 
+    border: 1px;
+    background-color: transparent; 
+    border-radius: 50%; 
+    position: absolute;
+    bottom: -5px; 
+    right: -5px;  
+    cursor: se-resize; 
+    display: none;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5); /* 增加阴影 */
+}
+
+.card:hover .card-resize-handle {
+    display: block; /* 鼠标悬停时显示 */
+}
+
+.bar {
+    height: 4px;
+    background-color: aliceblue;
+    width: 100%;
+}
+
+.name {
+    /* 为让name的宽度随card的resize而变化。 */
+    width: 100%;
+    /* 为了弥补input框和普通div的显示宽度差距。 */
+    box-sizing: border-box;
+
+    font-weight: bold;
+    font-size: medium;
+    border: none; /* 去掉边框 */
+    /* 分隔 name 和 content */
+    /* margin-bottom: 5px;  */
+    /* 文本居中 */
+    text-align: center; 
+    background-color: aliceblue;
+    outline: none; /* 去掉聚焦时的轮廓 */
+}
+
+.content {
+    width: 100%; 
+    /* height: auto; */
+    border: none; /* 去掉边框 */
+    font-size: 14px;
+    font-family: 'JetBrains Mono', 'FangZhengXiaoBiaoSongJian','微软雅黑', monospace; /* 设置字体 */
+    padding: 5px; /* 设置内边距 */
+    box-sizing: border-box; /* 包含 padding 和 border */
+    resize: none; /* 禁止手动调整大小 */
+    outline: none; /* 去掉聚焦时的轮廓 */
+    /* background-color: yellow; */
+    /* background-color: #fffacdd5; */
+    background-color: cornsilk;
+    display: none;
+}
+
+
+
+/* ==============================================
+# PART IV. Cards' Previews.
+============================================== */
+.preview {
+    width: 100%;
+    /* padding: 10px; */
+    min-height: 20px;
+    border: 1px solid #ccc;
+    
+    /* background-color: red; */
+    border: none; /* 去掉边框 */
+    font-family: 'Helvetica', 'FangZhengXiaoBiaoSongJian','楷体','微软雅黑','JetBrains Mono', monospace;
+    display: none; /* 初始状态隐藏 */
+    /* display: block; */
+}
+
+.preview:hover {
+    /* background-color: cornsilk; */
+    /* background-color: ghostwhite; */
+    /* background-color: aliceblue; */
+    background-color: #fafafa;
+}
+
+.preview a {
+    text-decoration: none;
+}
+
+.preview a:hover {
+    text-decoration: underline;
+}
+
+/* IV.01 Code Block ----------------------*/
+code {
+    background-color: #ffbec055;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono','FangZhengXiaoBiaoSongJian','Courier New', Courier, monospace;
+}
+
+pre code {
+    font-family: 'JetBrains Mono','FangZhengXiaoBiaoSongJian','Courier New', Courier, monospace;
+    border-radius: 5px;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('../fonts/JetBrainsMono-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'FangZhengXiaoBiaoSongJian';
+    src: url('../fonts/方正小标宋简.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* IV.02 LaTeX formula ----------------------*/
+.katex-display {
+    /* background-color: white; */
+    background-color: pink;
+    display: flex;              /* Enable flexbox */
+    justify-content: center;    /* Center horizontally */
+    /* Center vertically */
+    /* align-items: center;         */
+}
+
+.katex-display .katex {
+    width: 98%;
+    background-color: #fafafa;
+}
+.katex-display .katex:hover {
+    background-color: #FFFACD;
+}
+
+/* IV.03 images and image_resizers----------------------*/
+.img-container {
+    display: inline-block; /* 或者 block，取决于布局需求 */
+    /* background-color: #ecd255; */
+    width: auto;
+    position: relative;
+}
+
+.img-resize-handle {
+    width: 12px; 
+    height: 12px; 
+    border: 1px;
+    background-color: transparent; 
+    border-radius: 50%; 
+    position: absolute;
+    bottom: -5px; 
+    right: -5px;  
+    cursor: se-resize; 
+    display: none;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.img-container:hover .img-resize-handle {
+    display: block; /* Show on hover */
+}
+
+#change-image-alignment {
+    display: none; /* 默认隐藏 */
+    background: white; /* 背景颜色 */
+    border-radius: 5px; /* 圆角边框 */
+    /* 阴影效果 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+    z-index: 1000; /* 确保在其他元素上方 */
+}
+
+
+#change-image-alignment button {
+    font-size: medium;
+    /* 按钮背景色 */
+    background-color: white; 
+    color: black; /* 字体颜色 */
+    border: none; /* 无边框 */
+    /* 圆角 */
+    border-radius: 3px; 
+    /* 内边距 */
+    /* padding: 8px 12px;  */
+    margin: 2px; /* 按钮间距 */
+    cursor: pointer; /* 鼠标指针 */
+    transition: background-color 0.3s; /* 背景颜色变化效果 */
+}
+
+#change-image-alignment button:hover {
+    /* 悬停时的背景色 */
+    background-color: lightgoldenrodyellow; 
+    /* color: white; */
+}
+
+
+
+
+
+
+
+
+
+

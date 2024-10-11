@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,8 +33,9 @@
             color: #007bff;
             text-decoration: none;
             font-size: 18px;
-            max-width: 550px;
-            width: 550px;
+            /* max-width: 550px; */
+            /* width: 550px; */
+            width: calc(100% - 180px);
         }
 
         ul.board-list li a:hover {
@@ -107,7 +108,7 @@
 </head>
 <body>
 <div class="container">
-    <h1><img src="./templates/favicon.jpeg" alt="Website icon" width="80px"><br>如意画卷 SHORE Ver 0.3.4<br>
+    <h1><img src="./templates/favicon.jpeg" alt="Website icon" width="80px"><br>如意画卷 SHORE Ver 0.4.7 Stable<br>
         <span style="font-size: 24px; color: #1f8034;">(Scroll Helper Over Resizable Elements)</span></h1>
     <ul class="board-list">
         <!-- <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">Select One Here!</li> -->
@@ -119,9 +120,7 @@
             <button class="delete-board" data-board="{{ board }}">删除</button>
         </li>
         {% endfor %}
-        <!-- <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
-            Create Empty Scrolls Here!<br><br>(Try not to use same name.)
-        </li> -->
+        
         <li style="font-family: Arial, Helvetica, sans-serif; font-size: large;">
             在此创建你的如意画卷吧！<br><br>(注意名字不要重复)
         </li>
@@ -135,7 +134,7 @@
     </ul>
 </div>
 <div class="footer">
-    21生信 王硕 苏州大学苏州医学院<br>Oct 4th, 2024, SHORE Ver 0.3.4
+    21生信 王硕 苏州大学苏州医学院<br>Oct 10th, 2024, SHORE Ver 0.4.7 Stable
 </div>
 
 <script>
