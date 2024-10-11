@@ -14,6 +14,7 @@ SHORE is an open-source software designed to help you curate your knowledge and 
 ## Key Features 
 ![NEW](https://img.shields.io/badge/NEW%20FEATURE%20-Markdown-fedcba)<br>
 ![OLD](https://img.shields.io/badge/OLD%20FEATURES%20-LaTeX%2C%20Images-white)<br>
+<br>
 With SHORE v0.4.7 Stable, you can:
 - **Add cards to a scroll**: Each card can be dragged, resized, and edited to your liking.
 - **Create, delete, and rename scrolls**: Each scroll has infinite space to move cards around.
