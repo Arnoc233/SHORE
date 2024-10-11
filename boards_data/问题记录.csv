@@ -1,2 +1,0 @@
-CardID,CardName,CardContent,CardTop,CardLeft,CardWidth,CardHeight,CardBorderColor
-1728053737276,兼容性问题 记录,"""<br><div>2024年10月4日</div><div>王硕 破防 记录</div><br>有一些问题是在 python 架设 Flask 服务器的时候无法发现的，因为 python 对其进行了编码修改和路由优化，但是打包成 exe 就不一样了...<br><div>【图片问题】</div><div>&nbsp; &nbsp;使用间接路径会出现无法正常引用的情况，要改成用绝对路径来实现...</div><div>&nbsp; &nbsp;此外，前后端数据传输时，有很多字符会被编码，需要解码才能正常识别。比如 各种中文路径字符。</div><br>""",95,157,391,286,brown
