@@ -1,5 +1,7 @@
 # SHORE (Scroll Helper Over Resizable Elements) v0.4.7 Stable
-SHORE is an open-source software designed to help you curate your knowledge and desires.  
+SHORE is an infinite WHITE BOARDs and CARDs software. <br>
+An open-source software designed to help you curate your knowledge and desires.  <br>
+
 **Author**: Shuo Wang, Bioinformatics, Soochow University, shuowang3t6b@163.com  
 **Publish Time**: Oct 4th, 2024.
 
